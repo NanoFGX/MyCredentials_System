@@ -1,0 +1,121 @@
+FireStore Database Rules:
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============================================================
+    // USERS COLLECTION
+    // ============================================================
+    match /users/{uid} {
+
+      // Allowed fields in a user document
+      function allowedUserFields(data) {
+        return data.keys().hasOnly([
+          'full_name',
+          'ic_number',
+          'phone',
+          'phone_verified',
+          'ic_verified',
+          'kyc_status',
+          'created_at',
+          'last_login',
+          'uid'
+        ]);
+      }
+
+      allow create: if request.auth != null 
+        && request.auth.uid == uid
+        && allowedUserFields(request.resource.data);
+
+      allow read, update: if request.auth != null
+        && request.auth.uid == uid
+        && allowedUserFields(request.resource.data);
+
+      allow delete: if false; // prevent accidental self-deletion
+    }
+
+
+    // ============================================================
+    // DOCUMENTS COLLECTION (User-uploaded files)
+    // ============================================================
+    match /documents/{docId} {
+
+      /// Allowed fields in each document
+      function allowedDocumentFields(data) {
+        return data.keys().hasOnly([
+          'file_name',
+          'owner_uid',
+          'ai_tag',
+          'category',
+          'ic_number',
+          'file_url',
+          'storage_path',
+          'uploaded_at',
+          'processed_at',
+          'ai_confidence',
+          'ai_text_snippet'
+        ]);
+      }
+
+      // CREATE — only if owner_uid matches auth.uid
+      allow create: if request.auth != null
+        && request.resource.data.owner_uid == request.auth.uid
+        && allowedDocumentFields(request.resource.data);
+
+      // READ — owners only
+      allow read: if request.auth != null
+        && resource.data.owner_uid == request.auth.uid;
+
+      // UPDATE — only owners & AI server via same account
+      allow update: if request.auth != null
+        && resource.data.owner_uid == request.auth.uid
+        // Prevent changing owner_uid after create
+        && request.resource.data.owner_uid == resource.data.owner_uid
+        && allowedDocumentFields(request.resource.data);
+
+      // DELETE — owner only
+      allow delete: if request.auth != null
+        && resource.data.owner_uid == request.auth.uid;
+    }
+
+
+    // ============================================================
+    // REQUESTS (User → Government)
+    // ============================================================
+    match /requests/{requestId} {
+
+      allow create: if request.auth != null;
+
+      allow read, update, delete: if request.auth != null
+        && resource.data.userUid == request.auth.uid;
+    }
+
+
+    // ============================================================
+    // ORGANIZATIONS (Public Directory)
+    // ============================================================
+    match /organizations/{orgId} {
+
+      allow read: if true;  // public lookup allowed
+
+      allow write: if false; // cannot modify from client
+    }
+
+
+    // ============================================================
+    // SHARED ACCESS (User grants access → Gov/org)
+    // ============================================================
+    match /shared_access/{shareId} {
+      
+      allow create: if request.auth != null;
+
+      allow read, update, delete: if request.auth != null
+        && (
+          request.auth.uid == resource.data.owner_uid ||
+          // organization access via custom token
+          request.auth.token.org_id == resource.data.org_id
+        );
+    }
+  }
+}
