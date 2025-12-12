@@ -1,0 +1,104 @@
+## 💾 MyCredentials Firebase Setup Guide
+
+This guide provides the necessary steps and data structure to recreate the Cloud Firestore collections, Firebase Storage structure, and required Index configurations for the MyCredentials project.
+
+### Part 1: Initial Firebase Project Setup
+
+1.  **Create a Project:** Start a new project in the Firebase Console.
+2.  **Enable Services:** Enable **Cloud Firestore**, **Firebase Authentication**, and **Firebase Storage**.
+
+### Part 2: Firebase Storage Configuration
+
+1.  Navigate to the **Storage** section in your Firebase console.
+2.  Create a root folder named `documents/`. This folder will store all user-uploaded files.
+
+### Part 3: Firebase Authentication (User Management)
+
+1.  Navigate to the **Authentication** section.
+2.  Go to the **Sign-in method** tab and enable **Phone** as a sign-in provider.
+3.  Optional: The sample user in the Firestore documents corresponds to a Phone-based sign-in: `+60173014748`.
+
+### Part 4: Cloud Firestore Collections and Data
+
+Create the following five collections and insert the specified document data.
+
+#### 1. `users` Collection
+Stores user profile and verification status.
+
+| Field | Data Type | Value (Example) |
+| :--- | :--- | :--- |
+| **Document ID** | *String* | `2MkFMuZHfeZeJJWv49CY` |
+| `created_at` | *Timestamp* | December 11, 2025 at 3:25:22 PM UTC+8 |
+| `full_name` | *String* | "ZAKARIA BIN ALI" |
+| `ic_number` | *String* | "040810-16-0177" |
+| `ic_verified` | *Boolean* | `false` |
+| `kyc_status` | *String* | "pending" |
+| `last_login` | *Timestamp* | December 11, 2025 at 12:00:00 AM UTC+8 |
+| `phone` | *String* | "+60173014748" |
+| `phone_verified` | *Boolean* | `false` |
+| `uid` | *String* | "2MkFMuZHfeZeJJWv49CY" |
+
+#### 2. `organizations` Collection
+Stores data for external entities (e.g., Government agencies).
+
+| Field | Data Type | Value (Example) |
+| :--- | :--- | :--- |
+| **Document ID** | *String* | `jpj_001` |
+| `allowed_categories` | *Array* | ["Driving License", "Road Tax", "IC"] |
+| `industry` | *String* | "Government" |
+| `name` | *String* | "JPJ" |
+| `requires_ai_tag` | *Boolean* | `true` |
+
+#### 3. `documents` Collection
+Stores metadata for user-uploaded files.
+
+| Field | Data Type | Value (Example) |
+| :--- | :--- | :--- |
+| **Document ID** | *String* | `3Gad2W1Sq3MuVq6Uc2ed` |
+| `ai_tag` | *String* | "Pending" |
+| `category` | *String* | "Unsorted" |
+| `file_name` | *String* | "" |
+| `file_url` | *String* | "" |
+| `ic_number` | *String* | "040810-16-0177" |
+| `owner_uid` | *String* | "2MkFMuZHfeZeJJWv49CY" |
+| `storage_path` | *String* | "" |
+| `uploaded_at` | *Timestamp* | December 11, 2025 at 12:00:00 AM UTC+8 |
+
+#### 4. `requests` Collection
+Tracks requests made by organizations for documents.
+
+| Field | Data Type | Value (Example) |
+| :--- | :--- | :--- |
+| **Document ID** | *String* | `m2QZfKQOxliKl7wRC6bz` |
+| `created_at` | *Timestamp* | December 11, 2025 at 8:36:13 PM UTC+8 |
+| `org_id` | *String* | "jpj_001" |
+| `purpose` | *String* | "Driving license renewal" |
+| `status` | *String* | "pending" |
+| `userUid` | *String* | "2MkFMuZHfeZeJJWv49CY" |
+
+#### 5. `shared_access` Collection
+Handles active sharing tokens and expiry details.
+
+| Field | Data Type | Value (Example) |
+| :--- | :--- | :--- |
+| **Document ID** | *String* | `5G28aTu88zVHpBy7hU1` |
+| `doc_id` | *String* | "3Gad2W1Sq3MuVq6Uc2ed" |
+| `expires_at` | *Timestamp* | December 11, 2025 at 8:29:43 PM UTC+8 |
+| `org_id` | *String* | "jpj_001" |
+| `owner_uid` | *String* | "2MkFMuZHfeZeJJWv49CY" |
+| `request_id` | *String* | "m2QZfKQOxliKl7wRC6bz" |
+| `status` | *String* | "active" |
+| `watermark_token` | *String* | "sample_token_001" |
+
+### Part 5: Cloud Firestore Composite Index Setup
+
+This index is crucial for querying user documents efficiently.
+
+1.  Navigate to the **Indexes** tab in Cloud Firestore.
+2.  Click **Add index** with the following settings:
+    * **Collection ID:** `documents`
+    * **Fields to index:**
+        * Field 1: `owner_uid` (Direction: Ascending)
+        * Field 2: `uploaded_at` (Direction: Descending)
+        * Field 3: `__name__` (Direction: Ascending)
+    * **Query Scope:** Collection
