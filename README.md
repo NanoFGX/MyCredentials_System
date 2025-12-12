@@ -34,27 +34,39 @@
 
 -Face detection (OpenCV)📂 Project StructureMyCredentials/
 │
-├── app/                     # Expo source code (Frontend)
-│   ├── screens/             # Login, Dashboard, Vault, eKYC, Viewer
-│   ├── components/          # Reusable UI
-│   └── firebaseConfig.js    # Firebase initialization
+├── app/  
+# Expo source code (Frontend)
+│   ├── screens/    
+# Login, Dashboard, Vault, eKYC, Viewer
+│   ├── components/  
+# Reusable UI
+│   └── firebaseConfig.js  
+# Firebase initialization
 │
-├── ai_server/               # FastAPI OCR + eKYC backend
-│   ├── main.py              # API routes (/classify, /ekyc)
+├── ai_server/         
+# FastAPI OCR + eKYC backend
+│   ├── main.py     
+# API routes (/classify, /ekyc)
 │   ├── doc_classifier.joblib # Trained ML model
-│   └── requirements.txt     # Backend dependencies
+
+│   └── requirements.txt 
+# Backend dependencies
 │
-└── README.md                # Project documentation
+└── README.md   
+# Project documentation
 
 🧠 App Feature Details🔐
 1. eKYC Login (IC OCR + Face Match)The login process is secured and automated:User provides IC Number, IC Photo (front), and a Selfie.Backend performs:
+   
 1️⃣ OCR text extraction from the IC image.
+
 2️⃣ Name & IC number recognition/verification.
+
 3️⃣ Face match between the IC portrait and the uploaded selfie (using OpenCV).On successful verification, the user is created in Firestore and is logged into the Dashboard.📤 
 
-2. Document Upload + AI ClassificationUser selects or captures a document image.Expo app sends the image to the FastAPI server.Backend processing:Tesseract extracts raw text from the image.ML classifier predicts the document category (e.g., "education", "insurance").The file is stored in Firebase Storage, and its metadata (category, text snippet) is saved in Firestore.The Dashboard displays the classified document preview.📁 
+3. 📁 Document Upload + AI ClassificationUser selects or captures a document image.Expo app sends the image to the FastAPI server.Backend processing:Tesseract extracts raw text from the image.ML classifier predicts the document category (e.g., "education", "insurance").The file is stored in Firebase Storage, and its metadata (category, text snippet) is saved in Firestore.The Dashboard displays the classified document preview.
 
-3. Smart Vault OrganizationDocuments are automatically sorted into the following categories, making them easy to find:IdentificationEducationHealthWorkPropertyInsuranceGovernmentUnsorted (for unclassified documents)Each document entry shows badges, timestamps, OCR snippets, and action buttons (View, Download, Delete).
+4. Smart Vault OrganizationDocuments are automatically sorted into the following categories, making them easy to find:IdentificationEducationHealthWorkPropertyInsuranceGovernmentUnsorted (for unclassified documents)Each document entry shows badges, timestamps, OCR snippets, and action buttons (View, Download, Delete).
 
 🛠 Setup InstructionsFrontend Setup (Expo App)Install dependencies:
 
