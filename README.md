@@ -2,34 +2,34 @@ MyCredentials — AI-Powered Document Vault with eKYC Verification
 
 Secure • Intelligent • Automated
 
-MyCredentials is a cross-platform mobile app built with Expo + React Native that allows users to:
+MyCredentials is a cross-platform mobile application built using Expo + React Native that enables users to:
 
 Securely log in using mock eKYC (IC OCR + Face Match)
 
 Upload personal documents (IC, Education, Insurance, Work, etc.)
 
-Automatically classify documents using Tesseract OCR + ML model
+Automatically classify documents using Tesseract OCR + Machine Learning
 
 Store files in Firebase Storage
 
-View extracted information + download or delete documents
+View extracted OCR info, download files, or delete documents
 
-Automatically organize files inside a Smart Vault
+Automatically organize files inside an intelligent Smart Vault
 
-This project includes:
+This project contains:
 
 Expo App (Frontend)
 
-FastAPI Server (Backend)
+FastAPI Server (Backend for OCR + eKYC)
 
-Machine Learning Document Classifier
+ML Document Classifier (scikit-learn)
 
-Tesseract OCR Engine
+Tesseract OCR Integration
 
 Firebase Authentication, Firestore, & Storage
 
 🚀 Technologies Used
-Frontend (Expo App)
+Frontend
 
 React Native (Expo)
 
@@ -43,9 +43,7 @@ Firebase Firestore
 
 Firebase Storage
 
-PDF & Image Previews
-
-OCR Metadata Viewer
+Document Viewer + PDF/Image Preview
 
 Backend (ai_server)
 
@@ -55,66 +53,65 @@ Tesseract OCR (pytesseract)
 
 scikit-learn ML classifier
 
-OpenCV face matching (for mock eKYC)
+OpenCV face-detection (for mock eKYC)
 
-CORS for Expo mobile requests
+CORS-enabled API
 
 📂 Project Structure
 MyCredentials/
 │
 ├── app/                     
 │   ├── screens/             # Login, Dashboard, Vault, eKYC, Viewer
-│   ├── components/          # UI components
-│   └── firebaseConfig.js    # Firebase init
+│   ├── components/          # Shared UI components
+│   └── firebaseConfig.js    # Firebase initialization
 │
 ├── ai_server/               
-│   ├── main.py              # API routes (/classify, /ekyc)
-│   ├── doc_classifier.joblib # ML model
+│   ├── main.py              # FastAPI OCR & EKYC routes
+│   ├── doc_classifier.joblib # ML model for classification
 │   └── requirements.txt     # Backend dependencies
 │
-└── README.md 
-
+└── README.md
 🧠 App Features Overview
 🔐 1. eKYC Login (IC OCR + Face Match)
 
 Users log in using:
 
-12-digit IC Number
+IC Number
 
 IC Photo (front)
 
 Selfie
 
-Backend verifies by performing:
+Backend performs:
 
-1️⃣ OCR text extraction from IC
-2️⃣ IC number + name matching
-3️⃣ Face match (IC portrait vs selfie)
-4️⃣ Returns a verified identity
+1️⃣ OCR text extraction on IC
+2️⃣ Identifies IC number + name
+3️⃣ Face comparison (very simplified demo logic)
+4️⃣ On success → Firebase anonymous user is created
 
-On success → a new Firebase user profile is created → Dashboard loads.
+After successful verification → user enters Dashboard.
 
 📤 2. Document Upload + AI Classification
 
-Upload flow:
+Upload workflow:
 
-User selects or captures JPG
+User picks or captures a JPG
 
-Image sent to FastAPI
+Expo app sends image → FastAPI
 
-Tesseract extracts raw text
+OCR extracts raw text
 
-ML model predicts category
+ML classifier predicts the category
 
-Firestore saves metadata
+Firestore stores metadata
 
-Firebase Storage uploads file
+Firebase Storage stores the image
 
-Dashboard displays preview
+Dashboard shows preview + category badge
 
 📁 3. Smart Vault Organization
 
-Documents automatically organized into:
+Documents automatically sorted into:
 
 Identification
 
@@ -132,15 +129,15 @@ Property
 
 Unsorted
 
-Each item includes:
+Each card displays:
 
 Category badge
 
-Thumbnail preview (PDF or image)
+Thumbnail preview (image or PDF pseudo-thumbnail)
 
-OCR text snippet
+Timestamp
 
-Upload timestamp
+OCR snippet
 
 Delete / Download actions
 
@@ -148,12 +145,11 @@ Delete / Download actions
 Frontend Setup (Expo App)
 1. Install dependencies
 npm install
-
-2. Start the Expo app
+2. Start the app
 npx expo start
 
 
-You may open the app in:
+You may open the app via:
 
 Android Emulator
 
@@ -161,11 +157,11 @@ iOS Simulator
 
 Expo Go
 
-Web Browser
+Web
 
-This project uses file-based routing, supported by Expo.
+This project uses file-based routing inside the /app folder.
 
-Backend Setup (FastAPI + OCR)
+Backend Setup (FastAPI + OCR + eKYC)
 1. Install Python dependencies
 pip install -r ai_server/requirements.txt
 
@@ -174,26 +170,24 @@ pip install -r ai_server/requirements.txt
 Download from:
 https://github.com/tesseract-ocr/tesseract
 
-Then configure the path inside main.py:
+Configure the Tesseract path in main.py:
 
 pytesseract.pytesseract.tesseract_cmd = 
 r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-3. Start the backend server
+3. Start backend server
 uvicorn main:app --reload --port 8000
 
-Expo should connect to:
-
-Android Emulator: http://10.0.2.2:8000
-
-iOS / Web: http://localhost:8000
-
+Expo → Backend URLs
+Platform	FastAPI URL
+Android Emulator	http://10.0.2.2:8000
+iOS / Web	http://localhost:8000
 📡 API Endpoints
 POST /classify
 
-OCR extraction + ML document category prediction.
+OCR + ML document category detection.
 
-Response Example:
+Example Response
 
 {
   "label": "education",
@@ -203,9 +197,9 @@ Response Example:
 
 POST /ekyc
 
-Mock eKYC identity verification.
+Mock identity verification (IC OCR + face comparison).
 
-Response Example:
+Example Response
 
 {
   "match": true,
@@ -220,57 +214,59 @@ Enter IC number
 
 Upload IC photo
 
-Take a selfie
+Take selfie
 
 Backend verifies identity
 
-App logs in → Dashboard
+User logs in → Dashboard
 
 Document Upload Demo
 
 Choose JPG
 
-AI classifies it
+AI classifies category
 
-View OCR text
+View OCR snippet
 
-Download / delete document
+View, download, or delete document
 
-📘 Additional Expo Documentation
+📘 Expo Documentation
 
-This project was created using create-expo-app.
+(From original template)
 
-Useful Commands
+This project was created with create-expo-app.
+
+Get started
 
 Install dependencies:
 
 npm install
 
 
-Start the app:
+Start development server:
 
 npx expo start
 
-
-Reset Expo project:
-
+Reset project
 npm run reset-project
 
-Learn More
+Helpful Links
 
 Expo Docs: https://docs.expo.dev
 
-React Native Navigation: https://reactnavigation.org
+Expo Tutorial: https://docs.expo.dev/tutorial/introduction
+
+React Navigation Docs: https://reactnavigation.org
 
 FastAPI Docs: https://fastapi.tiangolo.com
 
-🤝 Join the Expo Community
+🤝 Community
 
-GitHub: https://github.com/expo/expo
+Expo GitHub: https://github.com/expo/expo
 
-Discord: https://chat.expo.dev
+Expo Discord: https://chat.expo.dev
 
 🛑 Disclaimer
 
-This eKYC system is a mock implementation for academic purposes.
-It should NOT be used in production environments that require real identity verification.
+This eKYC system is a mock academic prototype.
+It must not be used for real identity verification or any production system requiring security compliance.
