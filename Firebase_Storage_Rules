@@ -1,0 +1,20 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Allow authenticated users to read/write ONLY inside their own folder
+    match /documents/{uid}/{allPaths=**} {
+
+      allow write: if request.auth != null
+        && request.auth.uid == uid;
+
+      allow read: if request.auth != null
+        && request.auth.uid == uid;
+    }
+
+    // BLOCK everything else
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
