@@ -1,272 +1,83 @@
-MyCredentials — AI-Powered Document Vault with eKYC Verification
-
-Secure • Intelligent • Automated
-
-MyCredentials is a cross-platform mobile application built using Expo + React Native that enables users to:
-
-Securely log in using mock eKYC (IC OCR + Face Match)
-
-Upload personal documents (IC, Education, Insurance, Work, etc.)
-
-Automatically classify documents using Tesseract OCR + Machine Learning
-
-Store files in Firebase Storage
-
-View extracted OCR info, download files, or delete documents
-
-Automatically organize files inside an intelligent Smart Vault
-
-This project contains:
-
-Expo App (Frontend)
-
-FastAPI Server (Backend for OCR + eKYC)
-
-ML Document Classifier (scikit-learn)
-
-Tesseract OCR Integration
-
-Firebase Authentication, Firestore, & Storage
-
-🚀 Technologies Used
-Frontend
-
-React Native (Expo)
-
-React Navigation
-
-Expo Image Picker & Camera
-
-Firebase Authentication (OTP + Anonymous Login)
-
-Firebase Firestore
-
-Firebase Storage
-
-Document Viewer + PDF/Image Preview
-
-Backend (ai_server)
-
-FastAPI
-
-Tesseract OCR (pytesseract)
-
-scikit-learn ML classifier
-
-OpenCV face-detection (for mock eKYC)
-
-CORS-enabled API
-
-📂 Project Structure
-MyCredentials/
+📜 MyCredentials: AI-Powered Document Vault with eKYC VerificationSecure 
+• Intelligent 
+• AutomatedMyCredentials is a cross-platform mobile app built with Expo + React Native that provides a secure and intelligent document management system. It integrates a custom backend for advanced features like eKYC verification and automated document classification.
+✨ Features Overview🔐
+eKYC Login (IC OCR + Face Match): Securely logs users in using a mock eKYC process involving IC text extraction and face matching between the IC photo and a live selfie.
+📤 Document Upload + AI Classification: Users can upload personal documents (IC, insurance, education, etc.) which are then automatically classified using Tesseract OCR and a Machine Learning model.
+📁 Smart Vault Organization: Automatically sorts and organizes documents into predefined categories such as Identification, Education, Health, Property, Insurance, and more.
+Secure Storage: Documents and extracted metadata are stored securely using Firebase Storage and Firestore.Document Viewer: Allows users to view extracted information (OCR snippets) and preview, download, or delete their stored files.
+🚀 Technologies Used Category Component Technologies 
+Frontend (Mobile App) App & UIReact Native (Expo)
+-React NavigationCamera
+-MediaExpo Image Picker 
+-CameraBackend/DataFirebase Authentication (OTP + Anonymous login)
+-Firebase Firestore
+-StorageViewerOCR Document Viewer
+-Image PreviewsBackend (ai_server)ServerFastAPI
+-CORS enabledOCR EngineTesseract OCR (pytesseract)AI/MLMachine Learning classifier (scikit-learn) 
+-Face detection (OpenCV)📂 Project StructureMyCredentials/
 │
-├── app/                     
+├── app/                     # Expo source code (Frontend)
 │   ├── screens/             # Login, Dashboard, Vault, eKYC, Viewer
-│   ├── components/          # Shared UI components
+│   ├── components/          # Reusable UI
 │   └── firebaseConfig.js    # Firebase initialization
 │
-├── ai_server/               
-│   ├── main.py              # FastAPI OCR & EKYC routes
-│   ├── doc_classifier.joblib # ML model for classification
+├── ai_server/               # FastAPI OCR + eKYC backend
+│   ├── main.py              # API routes (/classify, /ekyc)
+│   ├── doc_classifier.joblib # Trained ML model
 │   └── requirements.txt     # Backend dependencies
 │
-└── README.md
-🧠 App Features Overview
-🔐 1. eKYC Login (IC OCR + Face Match)
+└── README.md                # Project documentation
 
-Users log in using:
+🧠 App Feature Details🔐
+1. eKYC Login (IC OCR + Face Match)The login process is secured and automated:User provides IC Number, IC Photo (front), and a Selfie.Backend performs:
+1️⃣ OCR text extraction from the IC image.
+2️⃣ Name & IC number recognition/verification.
+3️⃣ Face match between the IC portrait and the uploaded selfie (using OpenCV).On successful verification, the user is created in Firestore and is logged into the Dashboard.📤 
 
-IC Number
+2. Document Upload + AI ClassificationUser selects or captures a document image.Expo app sends the image to the FastAPI server.Backend processing:Tesseract extracts raw text from the image.ML classifier predicts the document category (e.g., "education", "insurance").The file is stored in Firebase Storage, and its metadata (category, text snippet) is saved in Firestore.The Dashboard displays the classified document preview.📁 
 
-IC Photo (front)
+3. Smart Vault OrganizationDocuments are automatically sorted into the following categories, making them easy to find:IdentificationEducationHealthWorkPropertyInsuranceGovernmentUnsorted (for unclassified documents)Each document entry shows badges, timestamps, OCR snippets, and action buttons (View, Download, Delete).
 
-Selfie
+🛠 Setup InstructionsFrontend Setup (Expo App)Install dependencies:
 
-Backend performs:
+Bashnpm install
 
-1️⃣ OCR text extraction on IC
-2️⃣ Identifies IC number + name
-3️⃣ Face comparison (very simplified demo logic)
-4️⃣ On success → Firebase anonymous user is created
+Start the app:
 
-After successful verification → user enters Dashboard.
+Bashnpx expo start
 
-📤 2. Document Upload + AI Classification
+This will open the development server, allowing you to run the app on an:Android emulatoriOS simulatorExpo Go appWeb (optional)You can start developing by editing the files inside the app directory. This project uses file-based routing.
 
-Upload workflow:
+Backend Setup (FastAPI + OCR)Install Python dependencies:Bashpip install -r ai_server/requirements.txt
 
-User picks or captures a JPG
+Ensure Tesseract OCR is installed:Windows Example: 
 
-Expo app sends image → FastAPI
+Install from Tesseract OCR GitHub and then set the path inside ai_server/main.py:Pythonpytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-OCR extracts raw text
+Run FastAPI server:Bashuvicorn main:app --reload --port 8000
 
-ML classifier predicts the category
+The Expo app should connect to the following addresses (ensure your device/emulator and computer are on the same network for physical devices):http://10.0.2.2:8000 
+(Android emulator)http://localhost:8000 (iOS / Web)
 
-Firestore stores metadata
+📡 API EndpointsEndpointMethodDescriptionReturns/classifyPOSTOCR + ML document classification.
+{ "label": "education", "confidence": 0.93, "text_snippet": "Universiti Putra Malaysia..."}/ekycPOSTIC OCR + face match (mock eKYC).
+{ "match": true, "name": "Muhammad Danial", "ic_number": "030112080011"}
 
-Firebase Storage stores the image
+🧪 Testing the SystemeKYC Demo FlowEnter IC number.
+Upload IC image.Take a selfie.
+Backend verifies the match and OCR data.
+App logs in and navigates to the Dashboard.Document Upload DemoChoose a JPG or PDF file to upload.
+Observe the automatic classification result.Open the viewer to see the extracted OCR text snippet.
+Test the Delete or Download functionalities.
+📚 Learn More about ExpoTo learn more about developing your project with Expo, look at the following resources:Expo documentation: Learn fundamentals, or go into advanced topics with our guides.
+Learn Expo tutorial: Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+💡 Get a Fresh ProjectWhen you're ready to clear the example code and start fresh, run:
 
-Dashboard shows preview + category badge
+Bashnpm run reset-project
 
-📁 3. Smart Vault Organization
+This command will move the starter code to the app-example directory and create a blank app directory where you can start developing.
 
-Documents automatically sorted into:
-
-Identification
-
-Education
-
-Health
-
-Insurance
-
-Work
-
-Government
-
-Property
-
-Unsorted
-
-Each card displays:
-
-Category badge
-
-Thumbnail preview (image or PDF pseudo-thumbnail)
-
-Timestamp
-
-OCR snippet
-
-Delete / Download actions
-
-🛠 Setup Instructions
-Frontend Setup (Expo App)
-1. Install dependencies
-npm install
-2. Start the app
-npx expo start
-
-
-You may open the app via:
-
-Android Emulator
-
-iOS Simulator
-
-Expo Go
-
-Web
-
-This project uses file-based routing inside the /app folder.
-
-Backend Setup (FastAPI + OCR + eKYC)
-1. Install Python dependencies
-pip install -r ai_server/requirements.txt
-
-2. Install Tesseract OCR
-
-Download from:
-https://github.com/tesseract-ocr/tesseract
-
-Configure the Tesseract path in main.py:
-
-pytesseract.pytesseract.tesseract_cmd = 
-r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-
-3. Start backend server
-uvicorn main:app --reload --port 8000
-
-Expo → Backend URLs
-Platform	FastAPI URL
-Android Emulator	http://10.0.2.2:8000
-iOS / Web	http://localhost:8000
-📡 API Endpoints
-POST /classify
-
-OCR + ML document category detection.
-
-Example Response
-
-{
-  "label": "education",
-  "confidence": 0.93,
-  "text_snippet": "Universiti Putra Malaysia..."
-}
-
-POST /ekyc
-
-Mock identity verification (IC OCR + face comparison).
-
-Example Response
-
-{
-  "match": true,
-  "name": "Muhammad Danial",
-  "ic_number": "030112080011"
-}
-
-🧪 Testing the System
-eKYC Demo Flow
-
-Enter IC number
-
-Upload IC photo
-
-Take selfie
-
-Backend verifies identity
-
-User logs in → Dashboard
-
-Document Upload Demo
-
-Choose JPG
-
-AI classifies category
-
-View OCR snippet
-
-View, download, or delete document
-
-📘 Expo Documentation
-
-(From original template)
-
-This project was created with create-expo-app.
-
-Get started
-
-Install dependencies:
-
-npm install
-
-
-Start development server:
-
-npx expo start
-
-Reset project
-npm run reset-project
-
-Helpful Links
-
-Expo Docs: https://docs.expo.dev
-
-Expo Tutorial: https://docs.expo.dev/tutorial/introduction
-
-React Navigation Docs: https://reactnavigation.org
-
-FastAPI Docs: https://fastapi.tiangolo.com
-
-🤝 Community
-
-Expo GitHub: https://github.com/expo/expo
-
-Expo Discord: https://chat.expo.dev
-
-🛑 Disclaimer
-
-This eKYC system is a mock academic prototype.
-It must not be used for real identity verification or any production system requiring security compliance.
+🤝 Join the CommunityJoin our community of developers creating universal apps.
+Expo on GitHub: View our open source platform and contribute.
+Discord community: Chat with Expo users and ask questions.
