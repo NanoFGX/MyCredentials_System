@@ -1,20 +1,37 @@
 📜 MyCredentials: AI-Powered Document Vault with eKYC VerificationSecure 
+
 • Intelligent 
+
 • AutomatedMyCredentials is a cross-platform mobile app built with Expo + React Native that provides a secure and intelligent document management system. It integrates a custom backend for advanced features like eKYC verification and automated document classification.
+
+
 ✨ Features Overview🔐
-eKYC Login (IC OCR + Face Match): Securely logs users in using a mock eKYC process involving IC text extraction and face matching between the IC photo and a live selfie.
-📤 Document Upload + AI Classification: Users can upload personal documents (IC, insurance, education, etc.) which are then automatically classified using Tesseract OCR and a Machine Learning model.
-📁 Smart Vault Organization: Automatically sorts and organizes documents into predefined categories such as Identification, Education, Health, Property, Insurance, and more.
-Secure Storage: Documents and extracted metadata are stored securely using Firebase Storage and Firestore.Document Viewer: Allows users to view extracted information (OCR snippets) and preview, download, or delete their stored files.
+-eKYC Login (IC OCR + Face Match): Securely logs users in using a mock eKYC process involving IC text extraction and face matching between the IC photo and a live selfie.
+
+-📤 Document Upload + AI Classification: Users can upload personal documents (IC, insurance, education, etc.) which are then automatically classified using Tesseract OCR and a Machine Learning model.
+
+-📁 Smart Vault Organization: Automatically sorts and organizes documents into predefined categories such as Identification, Education, Health, Property, Insurance, and more.
+
+-Secure Storage: Documents and extracted metadata are stored securely using Firebase Storage and Firestore.Document Viewer: Allows users to view extracted information (OCR snippets) and preview, download, or delete their stored files.
+
 🚀 Technologies Used Category Component Technologies 
-Frontend (Mobile App) App & UIReact Native (Expo)
+
+-Frontend (Mobile App) App & UIReact Native (Expo)
+
 -React NavigationCamera
+
 -MediaExpo Image Picker 
+
 -CameraBackend/DataFirebase Authentication (OTP + Anonymous login)
+
 -Firebase Firestore
+
 -StorageViewerOCR Document Viewer
+
 -Image PreviewsBackend (ai_server)ServerFastAPI
--CORS enabledOCR EngineTesseract OCR (pytesseract)AI/MLMachine Learning classifier (scikit-learn) 
+
+-CORS enabledOCR EngineTesseract OCR (pytesseract)AI/MLMachine Learning classifier (scikit-learn)
+
 -Face detection (OpenCV)📂 Project StructureMyCredentials/
 │
 ├── app/                     # Expo source code (Frontend)
@@ -66,12 +83,18 @@ The Expo app should connect to the following addresses (ensure your device/emula
 
 🧪 Testing the SystemeKYC Demo FlowEnter IC number.
 Upload IC image.Take a selfie.
+
 Backend verifies the match and OCR data.
+
 App logs in and navigates to the Dashboard.Document Upload DemoChoose a JPG or PDF file to upload.
+
 Observe the automatic classification result.Open the viewer to see the extracted OCR text snippet.
+
 Test the Delete or Download functionalities.
+
 📚 Learn More about ExpoTo learn more about developing your project with Expo, look at the following resources:Expo documentation: Learn fundamentals, or go into advanced topics with our guides.
 Learn Expo tutorial: Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+
 💡 Get a Fresh ProjectWhen you're ready to clear the example code and start fresh, run:
 
 Bashnpm run reset-project
@@ -79,5 +102,7 @@ Bashnpm run reset-project
 This command will move the starter code to the app-example directory and create a blank app directory where you can start developing.
 
 🤝 Join the CommunityJoin our community of developers creating universal apps.
+
 Expo on GitHub: View our open source platform and contribute.
+
 Discord community: Chat with Expo users and ask questions.
